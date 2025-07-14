@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../../../../../../Downloads/tiny32_v3_template_vscode-release/.pio"
+		},
+		{
+			"path": "../../../../../../../Downloads/tiny32_v3_template_vscode-release/.vscode"
+		}
+	],
+	"settings": {}
+}
