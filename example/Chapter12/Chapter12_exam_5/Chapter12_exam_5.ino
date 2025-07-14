@@ -45,11 +45,8 @@ void header_print(void)
     Serial.printf("***********************************************************************/\r\n");
 
     // กำหนด WiFi SSID และ Password (แก้ไขให้ตรงกับ WiFi ที่ต้องการเชื่อมต่อ)
-    // #define WIFI_SSID "YOUR_WIFI_SSID"
-    // #define WIFI_PASSWORD "YOUR_WIFI_PASSWORD"
-
-#define WIFI_SSID "innovation-lap"
-#define WIFI_PASSWORD "July2016innovat"
+#define WIFI_SSID "YOUR_WIFI_SSID"
+#define WIFI_PASSWORD "YOUR_WIFI_PASSWORD"
 
 // กำหนด Timezone (UTC+7 สำหรับไทย)
 #define GMT_OFFSET_SEC 7 * 3600
