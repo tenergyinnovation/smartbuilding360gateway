@@ -225,6 +225,11 @@ void setup()
 void loop()
 {
 
+
+    uint8_t _hour;
+    uint8_t _minute;
+    uint8_t _second;
+
     // --- รับข้อมูลจาก LoRa ---
     uint8_t buffer[256]; // สร้าง buffer สำหรับรับข้อมูล LoRa (ขนาด 256 bytes)
     int received = 0;    // ตัวแปรเก็บจำนวน byte ที่รับได้
@@ -257,9 +262,16 @@ void loop()
             }
             lastCounterMap[String(id)] = counter; // อัปเดต counter ล่าสุดของ id นี้
 
+            // แสดงเวลาในรูปแบบ HH:MM:SS
+            mcu.getTime(_hour, _minute, _second);
+            Serial.printf("Time: %02d:%02d:%02d\n", _hour, _minute, _second);
+
             // --- เตรียม JSON ใหม่สำหรับส่ง MQTT ---
             StaticJsonDocument<512> mqttDoc;
             // ข้อมูลฝั่ง Gateway
+            char timeStr[9]; // HH:MM:SS + null
+            snprintf(timeStr, sizeof(timeStr), "%02d:%02d:%02d", _hour, _minute, _second);
+            mqttDoc["timestamp"] = timeStr;
             mqttDoc["gateway_id"] = unitName;
             mqttDoc["gateway_fw"] = firmwareVersion;
             mqttDoc["gateway_topic"] = mqtt_topic_char;
