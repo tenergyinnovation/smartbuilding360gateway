@@ -125,6 +125,11 @@ void setup()
             ; // ถ้าเริ่มต้นบอร์ดไม่สำเร็จ ให้ค้างไว้
     }
 
+    mcu.initLCD(LCD_ADDRESS, 16, 2); // เริ่มต้นหน้าจอ OLED
+    mcu.displayLCD("Tenergy32Gateway", 0, 0);
+    mcu._lcd->setCursor(0, 1);                             // ตั้ง cursor ที่บรรทัดที่ 2
+    mcu._lcd->printf("Version: %s", mcu._version.c_str()); // แสดงเวอร์ชันบน LCD
+
     // Delay เพื่อให้เห็นข้อมูลเริ่มต้น
     delay(1000);
 
@@ -186,10 +191,6 @@ void setup()
         delay(500);
     }
 
-    // Initialize watchdog timer (ตั้ง watchdog timer 10 วินาที)
-    esp_task_wdt_init(10, true);
-    esp_task_wdt_add(NULL);
-
     char _line1[22], _line2[22], _line3[22], _line4[22]; // ตัวแปรสำหรับแสดงผลบน OLED
     // สร้างชื่อ unitName จาก MAC Address
     unitName = getUnitNameFromMac();
@@ -214,6 +215,10 @@ void setup()
 
     // แสดงผลบน OLED 4 บรรทัด
     mcu.displayOLEDLines(_line1, _line2, _line3, _line4);
+
+    // Initialize watchdog timer (ตั้ง watchdog timer 10 วินาที)
+    esp_task_wdt_init(10, true);
+    esp_task_wdt_add(NULL);
 }
 
 /***********************************************************************
@@ -224,7 +229,6 @@ void setup()
  ***********************************************************************/
 void loop()
 {
-
 
     uint8_t _hour;
     uint8_t _minute;
@@ -250,13 +254,15 @@ void loop()
             int counter = doc["counter"] | 0;
 
             // ตรวจสอบ id ว่าได้รับอนุญาตหรือไม่
-            if (!isAllowedId(id)) {
+            if (!isAllowedId(id))
+            {
                 Serial.println("ID not allowed, ignore packet.");
                 return;
             }
 
             // ตรวจสอบ counter ซ้ำเฉพาะแต่ละ id
-            if (lastCounterMap[String(id)] == counter) {
+            if (lastCounterMap[String(id)] == counter)
+            {
                 Serial.println("Duplicate counter for this id, ignore packet.");
                 return;
             }
@@ -293,6 +299,13 @@ void loop()
                 mqttDoc[key] = doc[key] | 0.0;
             }
 
+            // แสดงข้อมูลทาง LCD
+            mcu._lcd->clear();         // ล้างหน้าจอ LCD
+            mcu._lcd->setCursor(0, 0); // ตั้ง cursor ที่บรรทัดที่ 1
+            mcu._lcd->printf("%s", doc["id"] | "");
+            mcu._lcd->setCursor(0, 1); // ตั้ง cursor ที่บรรทัดที่ 2
+            mcu._lcd->printf("RSSI:%ddBm", lora_rssi);
+
             // แปลงเป็น JSON string เพื่อส่ง MQTT
             char mqttBuffer[512];
             size_t mqttLen = serializeJson(mqttDoc, mqttBuffer, sizeof(mqttBuffer));
@@ -317,7 +330,7 @@ void loop()
             Serial.printf("RSSI: %d dBm\n", lora_rssi);
 
             id = doc["id"] | ""; // อ่านค่า id จาก JSON
-            if (isAllowedId(id))             // ตรวจสอบว่า id นี้ได้รับอนุญาตหรือไม่
+            if (isAllowedId(id)) // ตรวจสอบว่า id นี้ได้รับอนุญาตหรือไม่
             {
                 Serial.printf("Data size: %d bytes\n", received);
 
@@ -349,7 +362,7 @@ void loop()
     {
         mcu.beep(1, 100);                                    // Beep 1 ครั้ง
         char _line1[22], _line2[22], _line3[22], _line4[22]; // ตัวแปรสำหรับแสดงผลบน OLED
-    
+
         snprintf(_line1, sizeof(_line1), "unit:%s", unitName.c_str());
         snprintf(_line2, sizeof(_line2), "pub:%s", topic_publish);
         snprintf(_line3, sizeof(_line3), "sub:%s", topic_subscribe);
