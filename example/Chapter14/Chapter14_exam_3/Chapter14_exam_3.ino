@@ -32,14 +32,14 @@ static std::map<String, int> lastCounterMap; // เก็บ counter ล่า�
 // Constants variables
 /**************************************/
 // กำหนด LoRa IDs ที่อนุญาตให้รับข้อมูล
-const char *lora_id_1 = "esp32hub-4784A4";
-const char *lora_id_2 = "esp32hub-4AC629";
-const char *lora_id_3 = "esp32hub-4AC62A"; // เพิ่ม id ได้ตามต้องการ
+const char *lora_id_1 = "esp32hub-000001"; // เปลี่ยนเป็น ID ของบอร์ดที่ต้องการ
+const char *lora_id_2 = "esp32hub-000002"; // เพิ่ม ID ได้ตามต้องการ
+const char *lora_id_3 = "esp32hub-000003"; // เพิ่ม ID ได้ตามต้องการ
 
 // กำหนด WiFi และ MQTT
-#define WIFI_SSID "innovation-lap"
-#define WIFI_PASSWORD "July2016innovat"
-#define MQTT_SERVER "192.168.1.15" // IP Raspberry Pi
+#define WIFI_SSID "YOUR_WIFI_SSID" // เปลี่ยนเป็น SSID ของคุณ
+#define WIFI_PASSWORD "YOUR_WIFI_PASSWORD" // เปลี่ยนเป็นรหัสผ่าน WiFi ของคุณ
+#define MQTT_SERVER "YOUR_MQTT_SERVER" // IP Raspberry Pi
 #define MQTT_PORT 1883
 const char *mqtt_user_char = "tiny32";
 const char *mqtt_pass_char = "tiny32";
